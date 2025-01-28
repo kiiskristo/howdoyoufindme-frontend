@@ -6,10 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Globe } from 'lucide-react';
 
+interface MarketContext {
+    overall_market_size_2023: string;
+    leading_companies: { name: string; description: string }[];
+    market_trends: string;
+}
+
+interface ComparisonToLeaders {
+    hear: {
+        strengths: string[];
+        weaknesses: string[];
+    };
+}
+
 interface RankingData {
     ranking_position: string;
-    market_context: string;
-    comparison_to_leaders: string;
+    market_context: MarketContext;
+    comparison_to_leaders: ComparisonToLeaders;
 }
 
 interface KeywordData {
@@ -159,19 +172,36 @@ const HowDoYouFindMe = () => {
                             )}
 
                             {/* Rankings Section */}
-                            {rankingData ? (
+                            {rankingData && (
                                 <Card>
                                     <CardContent className="p-6">
                                         <h2 className="text-2xl font-bold mb-6 text-gray-900">Search Rankings</h2>
                                         <div className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow">
                                             <h3 className="font-semibold text-gray-800">{rankingData.ranking_position}</h3>
-                                            <p className="text-sm text-gray-700">{rankingData.market_context}</p>
-                                            <p className="text-sm text-gray-700">{rankingData.comparison_to_leaders}</p>
+                                            
+                                            {/* Market Context */}
+                                            <div className="text-sm text-gray-700 mt-4">
+                                                <h4 className="font-bold">Market Context:</h4>
+                                                <p>{rankingData.market_context.overall_market_size_2023}</p>
+                                                <ul className="list-disc pl-4">
+                                                    {rankingData.market_context.leading_companies.map((company, index) => (
+                                                        <li key={index}>
+                                                            <strong>{company.name}:</strong> {company.description}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                <p><strong>Market Trends:</strong> {rankingData.market_context.market_trends}</p>
+                                            </div>
+                                            
+                                            {/* Comparison to Leaders */}
+                                            <div className="text-sm text-gray-700 mt-4">
+                                                <h4 className="font-bold">Comparison to Leaders:</h4>
+                                                <p><strong>Strengths:</strong> {rankingData.comparison_to_leaders.hear.strengths.join(", ")}</p>
+                                                <p><strong>Weaknesses:</strong> {rankingData.comparison_to_leaders.hear.weaknesses.join(", ")}</p>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>
-                            ) : (
-                                <p className="text-gray-700">No ranking data available</p>
                             )}
                         </div>
                     </div>
