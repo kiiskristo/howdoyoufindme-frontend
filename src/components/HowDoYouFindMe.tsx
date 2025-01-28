@@ -132,10 +132,10 @@ const HowDoYouFindMe = () => {
                             {keywordData?.competitors && (
                                 <Card>
                                     <CardContent className="p-6">
-                                        <h2 className="text-2xl font-bold mb-6">Competitors</h2>
-                                        <ul className="list-disc pl-6">
+                                        <h2 className="text-2xl font-bold mb-6 text-gray-900">Competitors</h2>
+                                        <ul className="list-disc pl-6 text-gray-700">
                                             {keywordData.competitors.map((competitor, index) => (
-                                                <li key={index} className="text-gray-700">{competitor}</li>
+                                                <li key={index}>{competitor}</li>
                                             ))}
                                         </ul>
                                     </CardContent>
@@ -146,7 +146,7 @@ const HowDoYouFindMe = () => {
                             {keywordData?.keywords && (
                                 <Card>
                                     <CardContent className="p-6">
-                                        <h2 className="text-2xl font-bold mb-6">Relevant Keywords</h2>
+                                        <h2 className="text-2xl font-bold mb-6 text-gray-900">Relevant Keywords</h2>
                                         <div className="flex flex-wrap gap-2">
                                             {keywordData.keywords.map((keyword, index) => (
                                                 <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
@@ -162,16 +162,16 @@ const HowDoYouFindMe = () => {
                             {rankingData ? (
                                 <Card>
                                     <CardContent className="p-6">
-                                        <h2 className="text-2xl font-bold mb-6">Search Rankings</h2>
+                                        <h2 className="text-2xl font-bold mb-6 text-gray-900">Search Rankings</h2>
                                         <div className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow">
-                                            <h3 className="font-semibold">{rankingData.ranking_position}</h3>
-                                            <p className="text-sm text-gray-500">{rankingData.market_context}</p>
-                                            <p className="text-sm text-gray-500">{rankingData.comparison_to_leaders}</p>
+                                            <h3 className="font-semibold text-gray-800">{rankingData.ranking_position}</h3>
+                                            <p className="text-sm text-gray-700">{rankingData.market_context}</p>
+                                            <p className="text-sm text-gray-700">{rankingData.comparison_to_leaders}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
                             ) : (
-                                <p>No ranking data available</p>
+                                <p className="text-gray-700">No ranking data available</p>
                             )}
                         </div>
                     </div>
