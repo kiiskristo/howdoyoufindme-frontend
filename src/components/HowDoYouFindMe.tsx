@@ -6,10 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Globe, ExternalLink } from 'lucide-react';
 
+interface RankingItem {
+    title: string;
+    score: number;
+  }
+  
+  interface SearchResults {
+    keywords: string[];
+    description: string;
+    searchQuery: string;
+    ranking: RankingItem[];
+  }
+
 const HowDoYouFindMe = () => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<SearchResults | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
