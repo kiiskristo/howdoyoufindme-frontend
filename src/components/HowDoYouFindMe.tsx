@@ -4,18 +4,27 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2, Globe, ExternalLink } from 'lucide-react';
+import { Search, Loader2, Globe } from 'lucide-react';
 
-interface RankingItem {
-    title: string;
-    score: number;
+interface RankingData {
+    ranking_position: string;
+    market_context: string;
+    comparison_to_leaders: string;
+}
+
+interface KeywordData {
+    category: string;
+    competitors?: string[];
+    keywords: string[];
+}
+
+interface TaskOutput {
+    name: string;
+    raw: string;
 }
 
 interface SearchResults {
-    keywords: string[];
-    description: string;
-    searchQuery: string;
-    ranking: RankingItem[];
+    tasks_output: TaskOutput[];
 }
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
@@ -37,6 +46,8 @@ const HowDoYouFindMe = () => {
             });
 
             const data = await response.json();
+            console.log("API Response:", data); // Debugging
+
             setResults(data);
         } catch (error) {
             console.error('Error:', error);
@@ -44,6 +55,20 @@ const HowDoYouFindMe = () => {
             setLoading(false);
         }
     };
+
+    // Extract tasks safely
+    const rankingTask = results?.tasks_output?.find(task => task.name === "ranking_task");
+    const keywordTask = results?.tasks_output?.find(task => task.name === "generate_keywords_task");
+
+    let rankingData: RankingData | null = null;
+    let keywordData: KeywordData | null = null;
+
+    try {
+        if (rankingTask?.raw) rankingData = JSON.parse(rankingTask.raw);
+        if (keywordTask?.raw) keywordData = JSON.parse(keywordTask.raw);
+    } catch (error) {
+        console.error("Error parsing API response:", error);
+    }
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -102,70 +127,52 @@ const HowDoYouFindMe = () => {
                 <section className="py-12 bg-gray-50 flex-grow">
                     <div className="container mx-auto px-4">
                         <div className="grid gap-8 max-w-4xl mx-auto">
-                            {/* Keywords and Description */}
-                            <Card>
-                                <CardContent className="p-6">
-                                    <h2 className="text-2xl font-bold mb-6">Analysis Results</h2>
-                                    <div className="space-y-6">
-                                        <div>
-                                            <h3 className="text-lg font-semibold mb-2">Generated Keywords</h3>
-                                            <div className="flex flex-wrap gap-2">
-                                                {results.keywords.map((keyword: string, index: number) => (
-                                                    <span
-                                                        key={index}
-                                                        className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm"
-                                                    >
-                                                        {keyword}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
+                            
+                            {/* Competitors Section */}
+                            {keywordData?.competitors && (
+                                <Card>
+                                    <CardContent className="p-6">
+                                        <h2 className="text-2xl font-bold mb-6">Competitors</h2>
+                                        <ul className="list-disc pl-6">
+                                            {keywordData.competitors.map((competitor, index) => (
+                                                <li key={index} className="text-gray-700">{competitor}</li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                        <div>
-                                            <h3 className="text-lg font-semibold mb-2">Description</h3>
-                                            <p className="text-gray-700">{results.description}</p>
+                            {/* Keywords Section */}
+                            {keywordData?.keywords && (
+                                <Card>
+                                    <CardContent className="p-6">
+                                        <h2 className="text-2xl font-bold mb-6">Relevant Keywords</h2>
+                                        <div className="flex flex-wrap gap-2">
+                                            {keywordData.keywords.map((keyword, index) => (
+                                                <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                                                    {keyword}
+                                                </span>
+                                            ))}
                                         </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                        <div>
-                                            <h3 className="text-lg font-semibold mb-2">Search Query Used</h3>
-                                            <div className="bg-gray-100 p-3 rounded-lg">
-                                                <code className="text-sm text-gray-700">{results.searchQuery}</code>
-                                            </div>
+                            {/* Rankings Section */}
+                            {rankingData ? (
+                                <Card>
+                                    <CardContent className="p-6">
+                                        <h2 className="text-2xl font-bold mb-6">Search Rankings</h2>
+                                        <div className="p-4 bg-white rounded-lg border hover:shadow-md transition-shadow">
+                                            <h3 className="font-semibold">{rankingData.ranking_position}</h3>
+                                            <p className="text-sm text-gray-500">{rankingData.market_context}</p>
+                                            <p className="text-sm text-gray-500">{rankingData.comparison_to_leaders}</p>
                                         </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Rankings */}
-                            <Card>
-                                <CardContent className="p-6">
-                                    <h2 className="text-2xl font-bold mb-6">Search Rankings</h2>
-                                    <div className="space-y-4">
-                                        {results.ranking.map((item: { title: string; score: number }, index: number) => (
-                                            <div
-                                                key={index}
-                                                className="flex items-center justify-between p-4 bg-white rounded-lg border hover:shadow-md transition-shadow"
-                                            >
-                                                <div className="flex items-center space-x-4">
-                                                    <span className="text-2xl font-bold text-purple-600">
-                                                        #{index + 1}
-                                                    </span>
-                                                    <div>
-                                                        <h3 className="font-semibold">{item.title}</h3>
-                                                        <p className="text-sm text-gray-500">Relevance Score</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center space-x-4">
-                                                    <span className="text-2xl font-bold text-green-600">
-                                                        {item.score}/100
-                                                    </span>
-                                                    <ExternalLink className="h-5 w-5 text-gray-400 hover:text-purple-600 cursor-pointer" />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <p>No ranking data available</p>
+                            )}
                         </div>
                     </div>
                 </section>
