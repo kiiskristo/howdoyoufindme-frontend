@@ -34,14 +34,27 @@ interface KeywordData {
   keywords: string[];
 }
 
+// Update these interfaces to match the backend response
 interface TaskOutput {
-  name: string;
-  raw: string;
-}
-
-interface SearchResults {
-  tasks_output: TaskOutput[];
-}
+    description: string;
+    name: string;
+    expected_output: string;
+    summary: string;
+    raw: string;
+    agent: string;
+    output_format: string;
+  }
+  
+  interface SearchResults {
+    tasks_output: TaskOutput[];
+    token_usage: {
+      total_tokens: number;
+      prompt_tokens: number;
+      cached_prompt_tokens: number;
+      completion_tokens: number;
+      successful_requests: number;
+    };
+  }
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
 
@@ -80,8 +93,13 @@ const HowDoYouFindMe = () => {
 
   // Parse JSON tasks
   try {
-    if (rankingTask?.raw) rankingData = JSON.parse(rankingTask.raw) as RankingData;
-    if (keywordTask?.raw) keywordData = JSON.parse(keywordTask.raw) as KeywordData;
+    if (rankingTask?.raw) {
+      const rawData = rankingTask.raw.replace(/\(/g, '{').replace(/\)/g, '}');
+      rankingData = JSON.parse(rawData);
+    }
+    if (keywordTask?.raw) {
+      keywordData = JSON.parse(keywordTask.raw);
+    }
   } catch (error) {
     console.error('Error parsing API response:', error);
   }
