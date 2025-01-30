@@ -112,7 +112,7 @@ const HowDoYouFindMe = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <Globe className="h-8 w-8" />
-              <span className="text-2xl font-bold">HowDoYouFindMe</span>
+              <span className="text-2xl font-bold">HowYouFindMe</span>
             </div>
             <div className="space-x-4">
               <Button variant="ghost" className="text-white hover:text-white hover:bg-white/20">
