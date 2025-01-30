@@ -26,20 +26,25 @@ export default function HowDoYouFindMe() {
             </div>
           </div>
         </nav>
+
+        {/* Hero Section with Search */}
+        <div className="py-20 text-center">
+          <h1 className="text-5xl font-bold mb-6">Discover Your Online Presence</h1>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Find out how visible your company, brand, or product is across the web.
+          </p>
+          
+          {/* Move SearchStreamer into hero section */}
+          <div className="max-w-3xl mx-auto px-4">
+            <SearchStreamer />
+          </div>
+        </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-purple-600 to-purple-800 text-white py-20 text-center">
-        <h1 className="text-5xl font-bold mb-6">Discover Your Online Presence</h1>
-        <p className="text-xl mb-8 max-w-2xl mx-auto">
-          Find out how visible your company, brand, or product is across the web.
-        </p>
-      </section>
-
-      {/* Our streaming search UI */}
+      {/* Results Section */}
       <section className="py-10 flex-grow bg-gray-50">
         <div className="container mx-auto px-4">
-          <SearchStreamer />
+          {/* Results will be part of SearchStreamer component */}
         </div>
       </section>
 
