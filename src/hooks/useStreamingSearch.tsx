@@ -4,10 +4,10 @@ import { useState, useCallback } from 'react';
 
 // Types for SSE data
 interface SSEMessage {
-  type: string;             // e.g. "status", "task_complete", "complete", "error"
-  message?: string;         // status or error messages
-  task?: string;            // which task completed, e.g. "keywords"
-  data?: any;               // the parsed JSON from your server for "task_complete"
+  type: string;                                 // e.g. "status", "task_complete", "complete", "error"
+  message?: string;                             // status or error messages
+  task?: string;                                // which task completed, e.g. "keywords"
+  data?: KeywordData | RankingData | null;      // the parsed JSON from your server for "task_complete"
 }
 
 // Optional: define your domain-specific data models:
