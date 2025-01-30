@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 export const metadata: Metadata = {
-  title: 'HowDoYouFindMe',
+  title: 'HowYouFindMe',
   description: 'Discover your online presence',
 }
 
