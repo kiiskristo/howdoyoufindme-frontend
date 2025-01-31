@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { useStreamingSearch } from '@/hooks/useStreamingSearch';
 import { Button } from '@/components/ui/button';
@@ -22,15 +20,26 @@ export function SearchStreamer() {
     startSearch(query);
   };
 
-  // Calculate current step
-  const currentStep = loading ?
-    (rankingData ? 3 : keywordData ? 2 : 1) :
-    (rankingData ? 4 : keywordData ? 2 : 0);
+  // Calculate current step based on both status messages and data
+  const getCurrentStep = () => {
+    if (!loading && !statusMessages.length) return 0;
+    if (!loading && rankingData) return 4;  // Complete
+    
+    // Check status messages for progress
+    const isAnalyzing = statusMessages.some(msg => msg.includes('Analyzing'));
+    const isRanking = statusMessages.some(msg => msg.includes('Determining ranking'));
+    
+    if (isRanking) return 3;
+    if (isAnalyzing || keywordData) return 2;
+    return 1;  // Starting analysis
+  };
+
+  const currentStep = getCurrentStep();
 
   const progressSteps = [
     "Starting analysis",
     "Analyzing industry and competitors",
-    "Researching market position",
+    "Determining market position",
     "Analysis complete"
   ];
 

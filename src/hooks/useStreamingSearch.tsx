@@ -64,7 +64,7 @@ export function useStreamingSearch() {
     // Construct your URL. Usually SSE is a GET endpoint:
     // Make sure FastAPI is also using GET for SSE (instead of POST).
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    const url = `${apiUrl}/api/search-rank/stream?query=${encodeURIComponent(query)}`;
+    const url = `${apiUrl}/api/search-rank/flow?query=${encodeURIComponent(query)}`;
 
     // Open the EventSource connection
     const eventSource = new EventSource(url, { withCredentials: true });
