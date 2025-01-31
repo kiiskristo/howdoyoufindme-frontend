@@ -34,18 +34,16 @@ export default function HowDoYouFindMe() {
             Find out how visible your company, brand, or product is across the web.
           </p>
           
-          {/* Move SearchStreamer into hero section */}
-          <div className="max-w-3xl mx-auto px-4">
-            <SearchStreamer />
-          </div>
+          
         </div>
       </header>
 
       {/* Results Section */}
       <section className="py-10 flex-grow bg-gray-50">
-        <div className="container mx-auto px-4">
-          {/* Results will be part of SearchStreamer component */}
-        </div>
+        {/* Move SearchStreamer into hero section */}
+        <div className="max-w-3xl mx-auto px-4">
+            <SearchStreamer />
+          </div>
       </section>
 
       {/* Footer */}

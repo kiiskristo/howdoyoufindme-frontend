@@ -22,9 +22,9 @@ export function SearchStreamer() {
     startSearch(query);
   };
 
-  // Calculate what step we're on
-  const currentStep = loading ? 
-    (rankingData ? 3 : keywordData ? 2 : 1) : 
+  // Calculate current step
+  const currentStep = loading ?
+    (rankingData ? 3 : keywordData ? 2 : 1) :
     (rankingData ? 4 : keywordData ? 2 : 0);
 
   const progressSteps = [
@@ -42,12 +42,12 @@ export function SearchStreamer() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter your company or website name..."
-          className="bg-white/90 placeholder-gray-500 text-gray-900"
+          className="bg-white shadow-sm placeholder-gray-500 text-gray-900"
         />
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={loading}
-          className="bg-purple-700 hover:bg-purple-800 text-white"
+          className="bg-purple-700 hover:bg-purple-800 text-white shadow-sm"
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -61,38 +61,32 @@ export function SearchStreamer() {
       {/* Progress Section */}
       {(loading || statusMessages.length > 0) && (
         <div className="mt-8 mb-8 relative px-5" style={{ fontFamily: 'Archivo, sans-serif', fontSize: '20px' }}>
-          {/* Vertical Progress Line */}
-          <div 
-            className="absolute left-8 top-3 -translate-x-1/2 bg-purple-600" 
-            style={{ 
-              width: '3px', 
-              height: `${(progressSteps.length - 1) * 28}px`,
-              zIndex: 0 
-            }} 
+          <div
+            className="absolute left-8 top-3 -translate-x-1/2 transition-all duration-500 bg-purple-600"
+            style={{
+              width: '3px',
+              height: `${Math.min(currentStep, progressSteps.length - 1) * 55}px`,
+              zIndex: 0,
+              transformOrigin: 'top'
+            }}
           />
-          
-          {/* Steps */}
           <div className="space-y-6">
             {progressSteps.map((step, index) => (
               <div key={index} className="flex items-center">
-                <div 
-                  className="w-6 h-6 rounded-full flex items-center justify-center border-2"
-                  style={{ 
+                <div className="w-6 h-6 rounded-full flex items-center justify-center border-2"
+                  style={{
                     backgroundColor: index < currentStep ? '#9333ea' : 'white',
                     borderColor: '#9333ea',
                     zIndex: 1,
                     position: 'relative'
-                  }}
-                >
+                  }}>
                   {index < currentStep && <Check size={16} color="white" />}
                 </div>
-                <span 
-                  className="ml-3"
-                  style={{ 
+                <span className="ml-3"
+                  style={{
                     fontWeight: index === currentStep ? '800' : '400',
                     color: '#1a1a1a'
-                  }}
-                >
+                  }}>
                   {step}
                 </span>
               </div>
@@ -103,59 +97,96 @@ export function SearchStreamer() {
 
       {/* Error Message */}
       {errorMessage && (
-        <p className="text-red-600 mt-4">
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
           {errorMessage}
-        </p>
+        </div>
       )}
 
       {/* Results Section */}
-      <div className="mt-6 text-gray-900">
+      <div className="mt-6 space-y-6">
         {/* Keyword Results */}
         {keywordData && (
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-bold">Industry Analysis</h2>
-              <p className="mt-2">{keywordData.category}</p>
-              
-              <h3 className="font-semibold mt-4">Keywords</h3>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {keywordData.keywords.map((kw, i) => (
-                  <span key={i} className="text-purple-700">#{kw}</span>
-                ))}
+          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Industry Analysis</h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-semibold text-gray-800">Category</h3>
+                <p className="mt-1 text-gray-700">{keywordData.category}</p>
               </div>
 
-              <h3 className="font-semibold mt-4">Main Competitors</h3>
-              <ul className="list-disc list-inside mt-2">
-                {keywordData.competitors?.map((comp, i) => (
-                  <li key={i}>{comp}</li>
-                ))}
-              </ul>
+              <div>
+                <h3 className="font-semibold text-gray-800">Keywords</h3>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {keywordData.keywords.map((kw, i) => (
+                    <span
+                      key={i}
+                      className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm border border-purple-100"
+                    >
+                      #{kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {keywordData.competitors && (
+                <div>
+                  <h3 className="font-semibold text-gray-800">Main Competitors</h3>
+                  <ul className="mt-2 space-y-1">
+                    {keywordData.competitors.map((comp, i) => (
+                      <li key={i} className="text-gray-700 flex items-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
+                        {comp}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* Ranking Results */}
         {rankingData && (
-          <div className="mt-8 space-y-4">
-            <h2 className="text-xl font-bold">Market Position</h2>
-            <p>{rankingData.ranking_position}</p>
+          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Market Position</h2>
 
-            <div>
-              <h3 className="font-semibold">Market Context</h3>
-              <p>Market Size: {rankingData.market_context.market_size}</p>
-              <p>Growth: {rankingData.market_context.growth_projections}</p>
-            </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-semibold text-gray-800">Ranking</h3>
+                <p className="mt-1 text-gray-700">{rankingData.ranking_position}</p>
+              </div>
 
-            <div>
-              <h3 className="font-semibold">Top Competitors</h3>
-              <ul className="space-y-2">
-                {rankingData.comparison_to_leaders.top_competitors.map((tc, i) => (
-                  <li key={i}>
-                    {tc.company} - Rank {tc.rank}, {tc.market_share}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2">{rankingData.comparison_to_leaders.summary}</p>
+              <div>
+                <h3 className="font-semibold text-gray-800">Market Context</h3>
+                <div className="mt-2 space-y-2">
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
+                    <span className="text-gray-600">Market Size</span>
+                    <span className="font-medium text-gray-900">{rankingData.market_context.market_size}</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
+                    <span className="text-gray-600">Growth</span>
+                    <span className="font-medium text-gray-900">{rankingData.market_context.growth_projections}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-gray-800">Top Competitors</h3>
+                <div className="mt-2 space-y-2">
+                  {rankingData.comparison_to_leaders.top_competitors.map((tc, i) => (
+                    <div key={i} className="flex items-center justify-between bg-purple-50 p-3 rounded-md">
+                      <span className="text-purple-900 font-medium">{tc.company}</span>
+                      <div className="text-purple-700">
+                        Rank {tc.rank} • {tc.market_share}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-gray-700 bg-gray-50 p-4 rounded-md italic">
+                  {rankingData.comparison_to_leaders.summary}
+                </p>
+              </div>
             </div>
           </div>
         )}

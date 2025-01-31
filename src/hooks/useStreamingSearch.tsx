@@ -67,7 +67,11 @@ export function useStreamingSearch() {
     const url = `${apiUrl}/api/search-rank/stream?query=${encodeURIComponent(query)}`;
 
     // Open the EventSource connection
-    const eventSource = new EventSource(url);
+    const eventSource = new EventSource(url, { withCredentials: true });
+    
+    eventSource.onopen = () => {
+      console.log('SSE connection opened');
+    };
 
     // Handle incoming messages
     eventSource.onmessage = (event) => {
