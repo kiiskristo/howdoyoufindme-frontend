@@ -86,7 +86,7 @@ export function SearchStreamer() {
                   {index < currentStep && <Check size={16} />}
                 </div>
                 <span
-                  className={`ml-3 font-semibold ${index === currentStep ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'
+                  className={`ml-3 ${index === currentStep ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'
                     }`}
                 >
                   {step}
