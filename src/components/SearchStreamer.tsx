@@ -20,18 +20,16 @@ export function SearchStreamer() {
     startSearch(query);
   };
 
-  // Calculate current step based on both status messages and data
   const getCurrentStep = () => {
     if (!loading && !statusMessages.length) return 0;
-    if (!loading && rankingData) return 4;  // Complete
-    
-    // Check status messages for progress
+    if (!loading && rankingData) return 4;
+
     const isAnalyzing = statusMessages.some(msg => msg.includes('Analyzing'));
     const isRanking = statusMessages.some(msg => msg.includes('Determining ranking'));
-    
+
     if (isRanking) return 3;
     if (isAnalyzing || keywordData) return 2;
-    return 1;  // Starting analysis
+    return 1;
   };
 
   const currentStep = getCurrentStep();
@@ -51,25 +49,21 @@ export function SearchStreamer() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter your company or website name..."
-          className="bg-white shadow-sm placeholder-gray-500 text-gray-900"
+          className="bg-white dark:bg-gray-800 shadow-sm placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-200"
         />
         <Button
           type="submit"
           disabled={loading}
           className="bg-purple-700 hover:bg-purple-800 text-white shadow-sm"
         >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Search className="h-4 w-4 mr-2" />
-          )}
+          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
           Analyze
         </Button>
       </form>
 
       {/* Progress Section */}
       {(loading || statusMessages.length > 0) && (
-        <div className="mt-8 mb-8 relative px-5" style={{ fontFamily: 'Archivo, sans-serif', fontSize: '20px' }}>
+        <div className="mt-8 mb-8 relative px-5" style={{ fontFamily: 'Archivo, sans-serif', fontSize: '18px' }}>
           <div
             className="absolute left-8 top-3 -translate-x-1/2 transition-all duration-500 bg-purple-600"
             style={{
@@ -82,20 +76,19 @@ export function SearchStreamer() {
           <div className="space-y-6">
             {progressSteps.map((step, index) => (
               <div key={index} className="flex items-center">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center border-2"
-                  style={{
-                    backgroundColor: index < currentStep ? '#9333ea' : 'white',
-                    borderColor: '#9333ea',
-                    zIndex: 1,
-                    position: 'relative'
-                  }}>
-                  {index < currentStep && <Check size={16} color="white" />}
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${index < currentStep
+                      ? 'bg-purple-600 border-purple-600 text-white'
+                      : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-black dark:text-white'
+                    }`}
+                    style={{ zIndex: 1 }}
+                >
+                  {index < currentStep && <Check size={16} />}
                 </div>
-                <span className="ml-3"
-                  style={{
-                    fontWeight: index === currentStep ? '800' : '400',
-                    color: '#1a1a1a'
-                  }}>
+                <span
+                  className={`ml-3 font-semibold ${index === currentStep ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'
+                    }`}
+                >
                   {step}
                 </span>
               </div>
@@ -106,7 +99,7 @@ export function SearchStreamer() {
 
       {/* Error Message */}
       {errorMessage && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg text-red-600 dark:text-red-200">
           {errorMessage}
         </div>
       )}
@@ -115,22 +108,22 @@ export function SearchStreamer() {
       <div className="mt-6 space-y-6">
         {/* Keyword Results */}
         {keywordData && (
-          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Industry Analysis</h2>
+          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Industry Analysis</h2>
 
             <div className="space-y-6">
               <div>
-                <h3 className="font-semibold text-gray-800">Category</h3>
-                <p className="mt-1 text-gray-700">{keywordData.category}</p>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-300">Category</h3>
+                <p className="mt-1 text-gray-700 dark:text-gray-400">{keywordData.category}</p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-800">Keywords</h3>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-300">Keywords</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {keywordData.keywords.map((kw, i) => (
                     <span
                       key={i}
-                      className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm border border-purple-100"
+                      className="bg-purple-50 dark:bg-purple-900 text-purple-700 dark:text-purple-200 px-3 py-1 rounded-full text-sm border border-purple-100 dark:border-purple-700"
                     >
                       #{kw}
                     </span>
@@ -140,10 +133,10 @@ export function SearchStreamer() {
 
               {keywordData.competitors && (
                 <div>
-                  <h3 className="font-semibold text-gray-800">Main Competitors</h3>
+                  <h3 className="font-semibold text-gray-800 dark:text-gray-300">Main Competitors</h3>
                   <ul className="mt-2 space-y-1">
                     {keywordData.competitors.map((comp, i) => (
-                      <li key={i} className="text-gray-700 flex items-center">
+                      <li key={i} className="text-gray-700 dark:text-gray-400 flex items-center">
                         <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span>
                         {comp}
                       </li>
@@ -157,42 +150,42 @@ export function SearchStreamer() {
 
         {/* Ranking Results */}
         {rankingData && (
-          <div className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Market Position</h2>
+          <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Market Position</h2>
 
             <div className="space-y-6">
               <div>
-                <h3 className="font-semibold text-gray-800">Ranking</h3>
-                <p className="mt-1 text-gray-700">{rankingData.ranking_position}</p>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-300">Ranking</h3>
+                <p className="mt-1 text-gray-700 dark:text-gray-400">{rankingData.ranking_position}</p>
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-800">Market Context</h3>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-300">Market Context</h3>
                 <div className="mt-2 space-y-2">
-                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
-                    <span className="text-gray-600">Market Size</span>
-                    <span className="font-medium text-gray-900">{rankingData.market_context.market_size}</span>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded-md">
+                    <span className="text-gray-600 dark:text-gray-300">Market Size</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100 text-right">{rankingData.market_context.market_size}</span>
                   </div>
-                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
-                    <span className="text-gray-600">Growth</span>
-                    <span className="font-medium text-gray-900">{rankingData.market_context.growth_projections}</span>
+                  <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded-md">
+                    <span className="text-gray-600 dark:text-gray-300">Growth</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100 text-right">{rankingData.market_context.growth_projections}</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-800">Top Competitors</h3>
+                <h3 className="font-semibold text-gray-800 dark:text-gray-300">Top Competitors</h3>
                 <div className="mt-2 space-y-2">
                   {rankingData.comparison_to_leaders.top_competitors.map((tc, i) => (
-                    <div key={i} className="flex items-center justify-between bg-purple-50 p-3 rounded-md">
-                      <span className="text-purple-900 font-medium">{tc.company}</span>
-                      <div className="text-purple-700">
+                    <div key={i} className="flex items-center justify-between bg-purple-50 dark:bg-purple-900 p-3 rounded-md">
+                      <span className="text-purple-900 dark:text-purple-200 font-medium">{tc.company}</span>
+                      <div className="text-purple-700 dark:text-purple-300">
                         Rank {tc.rank} • {tc.market_share}
                       </div>
                     </div>
                   ))}
                 </div>
-                <p className="mt-4 text-gray-700 bg-gray-50 p-4 rounded-md italic">
+                <p className="mt-4 text-gray-800 dark:text-gray-300 bg-gray-50 p-4 bg-gray-50 dark:bg-gray-900 rounded-md italic">
                   {rankingData.comparison_to_leaders.summary}
                 </p>
               </div>
