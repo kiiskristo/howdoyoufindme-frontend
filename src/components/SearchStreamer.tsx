@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStreamingSearch } from '@/hooks/useStreamingSearch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Check } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export function SearchStreamer() {
   const [query, setQuery] = useState('');
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const {
     loading,
     errorMessage,
@@ -15,9 +18,22 @@ export function SearchStreamer() {
     startSearch,
   } = useStreamingSearch();
 
+  // Check for query parameter on component mount
+  useEffect(() => {
+    const queryParam = searchParams.get('query');
+    if (queryParam) {
+      setQuery(queryParam);
+      startSearch(queryParam);
+    }
+  }, [searchParams, startSearch]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    startSearch(query);
+    if (query.trim()) {
+      // Update URL with the search query
+      router.push(`/?query=${encodeURIComponent(query.trim())}`);
+      startSearch(query);
+    }
   };
 
   const getCurrentStep = () => {
