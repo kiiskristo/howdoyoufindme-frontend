@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useStreamingSearch } from '@/hooks/useStreamingSearch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Check } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export function SearchStreamer() {
+// Separate component that uses searchParams
+function SearchStreamerInner() {
   const [query, setQuery] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -210,5 +211,20 @@ export function SearchStreamer() {
         )}
       </div>
     </div>
+  );
+}
+
+export function SearchStreamer() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-3xl mx-auto">
+        <div className="flex gap-2">
+          <div className="flex-1 h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-md"></div>
+          <div className="w-24 h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-md"></div>
+        </div>
+      </div>
+    }>
+    <SearchStreamerInner />
+    </Suspense>
   );
 }
