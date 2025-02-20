@@ -86,7 +86,7 @@ export default function HowDoYouFindMe() {
         </div>
         {/* Hero Section */}
         <section className="py-10 px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Discover Your Online Presence</h1>
+          <h1 className="text-5xl font-bold mb-6">Discover Your AI Presence</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Find out how visible your company, brand, or product is across the web.
           </p>

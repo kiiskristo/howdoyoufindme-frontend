@@ -4,7 +4,7 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 export const metadata: Metadata = {
   title: 'HowYouFindMe',
-  description: 'Discover your online presence',
+  description: 'Discover your AI presence',
 }
 
 export default function RootLayout({
